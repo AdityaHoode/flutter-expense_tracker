@@ -2,7 +2,6 @@ import 'package:expense_tracker/widgets/NewTransaction.dart';
 import 'package:expense_tracker/widgets/TransactionList.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'models/transaction.dart';
 import 'widgets/Chart.dart';
@@ -77,12 +76,16 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final mediaQuery = MediaQuery.of(context);
+
     final appBar = AppBar(
       title: Text('Expense Tracker'),
       actions: [
         IconButton(icon: Icon(Icons.add), onPressed: () => _showModal(context)),
       ],
     );
+
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
@@ -106,33 +109,33 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             if (!isLandscape)
               Container(
-                height: ((MediaQuery.of(context).size.height -
+                height: ((mediaQuery.size.height -
                         appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
+                        mediaQuery.padding.top) *
                     0.3),
                 child: Chart(_recentTransactions),
               ),
             if (!isLandscape)
               Container(
-                height: ((MediaQuery.of(context).size.height -
+                height: ((mediaQuery.size.height -
                         appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
+                        mediaQuery.padding.top) *
                     0.7),
                 child: TransactionList(_userTransactions, _deleteTransaction),
               ),
             if (isLandscape)
               _showChart
                   ? Container(
-                      height: ((MediaQuery.of(context).size.height -
+                      height: ((mediaQuery.size.height -
                               appBar.preferredSize.height -
-                              MediaQuery.of(context).padding.top) *
+                              mediaQuery.padding.top) *
                           0.7),
                       child: Chart(_recentTransactions),
                     )
                   : Container(
-                      height: ((MediaQuery.of(context).size.height -
+                      height: ((mediaQuery.size.height -
                               appBar.preferredSize.height -
-                              MediaQuery.of(context).padding.top) *
+                              mediaQuery.padding.top) *
                           0.7),
                       child: TransactionList(
                           _userTransactions, _deleteTransaction),
