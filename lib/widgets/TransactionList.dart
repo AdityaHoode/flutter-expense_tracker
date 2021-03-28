@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
@@ -34,42 +35,43 @@ class TransactionList extends StatelessWidget {
           })
         : ListView.builder(
             itemBuilder: (ctx, index) {
-              return Card(
-                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                elevation: 5,
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    child: Padding(
-                      padding: EdgeInsets.all(6),
-                      child: FittedBox(
-                        child: Text(
-                          '\$${transactions[index].amount}',
+              return Slidable(
+                actionPane: SlidableScrollActionPane(),
+                actionExtentRatio: 0.25,
+                secondaryActions: [
+                  Container(
+                    height: 71,
+                    child: IconSlideAction(
+                      icon: Icons.delete,
+                      color: Theme.of(context).errorColor,
+                      onTap: () => deleteHandler(transactions[index].id),
+                    ),
+                  )
+                ],
+                child: Card(
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                  elevation: 5,
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                        padding: EdgeInsets.all(6),
+                        child: FittedBox(
+                          child: Text(
+                            '\$${transactions[index].amount}',
+                          ),
                         ),
                       ),
                     ),
+                    title: Text(
+                      transactions[index].title,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                    subtitle: Text(
+                      DateFormat.yMMMd().format(transactions[index].date),
+                    ),
                   ),
-                  title: Text(
-                    transactions[index].title,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  subtitle: Text(
-                    DateFormat.yMMMd().format(transactions[index].date),
-                  ),
-                  trailing: MediaQuery.of(context).size.width > 460
-                      ? FlatButton.icon(
-                          onPressed: () =>
-                              deleteHandler(transactions[index].id),
-                          icon: Icon(Icons.delete),
-                          label: Text("Delete"),
-                          textColor: Theme.of(context).errorColor,
-                        )
-                      : IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () =>
-                              deleteHandler(transactions[index].id),
-                          color: Theme.of(context).errorColor,
-                        ),
                 ),
               );
             },
