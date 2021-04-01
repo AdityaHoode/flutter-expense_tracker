@@ -73,6 +73,60 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool _showChart = false;
 
+  List<Widget> _buildLandscapeContent(
+      MediaQueryData mediaQuery, AppBar appBar) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Show chart"),
+          Switch(
+            value: _showChart,
+            onChanged: (val) {
+              setState(() {
+                _showChart = val;
+              });
+            },
+          )
+        ],
+      ),
+      _showChart
+          ? Container(
+              height: ((mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.7),
+              child: Chart(_recentTransactions),
+            )
+          : Container(
+              height: ((mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.7),
+              child: TransactionList(_userTransactions, _deleteTransaction),
+            ),
+    ];
+  }
+
+  List<Widget> _buildPortraitContent(MediaQueryData mediaQuery, AppBar appBar) {
+    return [
+      Container(
+        height: ((mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
+            0.3),
+        child: Chart(_recentTransactions),
+      ),
+      Container(
+        height: ((mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
+            0.7),
+        child: TransactionList(_userTransactions, _deleteTransaction),
+      ),
+    ];
+  }
+
   Widget build(BuildContext context) {
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
@@ -92,54 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Show chart"),
-                  Switch(
-                    value: _showChart,
-                    onChanged: (val) {
-                      setState(() {
-                        _showChart = val;
-                      });
-                    },
-                  )
-                ],
-              ),
-            if (!isLandscape)
-              Container(
-                height: ((mediaQuery.size.height -
-                        appBar.preferredSize.height -
-                        mediaQuery.padding.top) *
-                    0.3),
-                child: Chart(_recentTransactions),
-              ),
-            if (!isLandscape)
-              Container(
-                height: ((mediaQuery.size.height -
-                        appBar.preferredSize.height -
-                        mediaQuery.padding.top) *
-                    0.7),
-                child: TransactionList(_userTransactions, _deleteTransaction),
-              ),
-            if (isLandscape)
-              _showChart
-                  ? Container(
-                      height: ((mediaQuery.size.height -
-                              appBar.preferredSize.height -
-                              mediaQuery.padding.top) *
-                          0.7),
-                      child: Chart(_recentTransactions),
-                    )
-                  : Container(
-                      height: ((mediaQuery.size.height -
-                              appBar.preferredSize.height -
-                              mediaQuery.padding.top) *
-                          0.7),
-                      child: TransactionList(
-                          _userTransactions, _deleteTransaction),
-                    ),
+            if (isLandscape) ..._buildLandscapeContent(mediaQuery, appBar),
+            if (!isLandscape) ..._buildPortraitContent(mediaQuery, appBar),
           ],
         ),
       ),
